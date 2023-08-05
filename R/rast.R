@@ -298,6 +298,9 @@ setMethod("rast", signature(x="SpatRasterDataset"),
 setMethod("rast", signature(x="array"),
 	function(x, crs="", extent=NULL) {
 		dims <- dim(x)
+		if (length(dims)==1){
+     			x <- array(x,c(1,dim(x)))
+    		}
 		if (length(dims) > 3) {
 			if (length(dims) == 4) {
 				if (dims[4] == 1) {
@@ -310,11 +313,18 @@ setMethod("rast", signature(x="array"),
 			}
 		}
 		r <- methods::new("SpatRaster")
-		if (!is.null(extent)) {
+		if ((length(dim)==1) & (!is.null(extent))) {
+			sizex <- (e[2]-e[1])
+			sizey <- (e[4]-e[3])
+			resolution <- sqrt(sizex * sizey / length(x))
+			dimx <- roundup(sizex/resolution)
+			dimy <- roundup(sizey/resolution)
+			x <- array(x,c(dimx,dimy))
+		} else if (!is.null(extent)) {
 			e <- as.vector(extent)
-		} else {
-			e <- c(0, dims[2], 0, dims[1])
-		}
+			} else {
+				e <- c(0, dims[2], 0, dims[1])
+			}
 		crs <- character_crs(crs, "rast")
 		r@pnt <- SpatRaster$new(dims, e, crs)
 		values(r) <- x

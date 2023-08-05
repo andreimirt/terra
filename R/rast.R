@@ -311,7 +311,7 @@ setMethod("rast", signature(x="array"),
 		}
 		r <- methods::new("SpatRaster")
 		if (length(dims)==1) {
-			if (!is.null(extent))) {
+			if (!is.null(extent)) {
 				sizex <- (e[2]-e[1])
 				sizey <- (e[4]-e[3])
 				resolution <- sqrt(sizex * sizey / length(x))

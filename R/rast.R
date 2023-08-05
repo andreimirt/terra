@@ -297,10 +297,10 @@ setMethod("rast", signature(x="SpatRasterDataset"),
 
 setMethod("rast", signature(x="array"),
 	function(x, crs="", extent=NULL) {
-		dims <- dim(x)
 		if (length(dims)==1){
      			x <- array(x,c(1,dim(x)))
     		}
+		dims <- dim(x)
 		if (length(dims) > 3) {
 			if (length(dims) == 4) {
 				if (dims[4] == 1) {
